@@ -16,7 +16,7 @@ using namespace std;
 i32 get_id(i32 i, i32 j, i32 width) {
 	return i * width + j;
 }
-
+// 求系数矩阵A
 Mat getA(i32 height, i32 width) {
 	Mat A = Mat::eye(height * width, height * width, CV_64FC1);
 	A *= -4;
@@ -31,7 +31,7 @@ Mat getA(i32 height, i32 width) {
 	}
 	return A;
 }
-
+// 求源图像散度
 i32 get_div(Mat img, i32 i, i32 j, i32 roi_height, i32 roi_width) {
 	i32 x1, x2, y1, y2;
 	if (j != 0) x1 = img.ATD(i, j - 1);
@@ -44,7 +44,7 @@ i32 get_div(Mat img, i32 i, i32 j, i32 roi_height, i32 roi_width) {
 	else y2 = img.ATD(i, j);
 	return x1 + x2 + y1 + y2 - 4 * img.ATD(i, j);
 }
-
+// 求b
 Mat getb(Mat img1, Mat img2, i32 roix, i32 roiy, i32 roi_height, i32 roi_width) {
 	Mat B = Mat::zeros(roi_height * roi_width, 1, CV_64FC1);
 	for (i32 i = 0; i < roi_height; i++) {
@@ -70,7 +70,7 @@ Mat get_result(Mat A, Mat b, i32 height) {
 
 Mat poisson_blending(i32 roix, i32 roiy, Mat img1, Mat img2, i32 roi_height, i32 roi_width, Mat A) {
 	vector rgb1, rgb2, result;
-
+	// 三个通道分别求解，最后再叠加
 	split(img1, rgb1);
 	split(img2, rgb2);
 
